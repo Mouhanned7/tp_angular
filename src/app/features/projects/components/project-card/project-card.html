@@ -1,0 +1,11 @@
+<article>
+  <h2>{{ project().name }}</h2>
+
+  <p>{{ project().description }}</p>
+
+  <p>Statut : {{ project().status }}</p>
+
+  <app-task-list [tasks]="project().tasks" />
+
+  <button type="button" (click)="selectProject()">Sélectionner</button>
+</article>

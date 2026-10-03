@@ -1,0 +1,15 @@
+@if (tasks().length === 0) {
+  <p>Aucune tâche.</p>
+} @else {
+  <ul>
+    @for (task of tasks(); track task.id) {
+      <li>
+        <h3>{{ task.title }}</h3>
+
+        <p>Priorité : {{ task.priority }}</p>
+
+        <p>Statut : {{ task.status }}</p>
+      </li>
+    }
+  </ul>
+}

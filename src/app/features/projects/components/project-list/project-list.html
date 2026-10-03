@@ -1,0 +1,17 @@
+<main>
+  <h1>TaskFlow</h1>
+
+  <label for="search">Rechercher un projet</label>
+
+  <input id="search" type="search" placeholder="Rechercher un projet..." [(ngModel)]="searchTerm" />
+
+  @if (selectedProject(); as selected) {
+    <p role="status">Projet sélectionné : {{ selected.name }}</p>
+  }
+
+  @for (project of filteredProjects(); track project.id) {
+    <app-project-card [project]="project" (projectSelected)="onProjectSelected($event)" />
+  } @empty {
+    <p>Aucun projet trouvé.</p>
+  }
+</main>
