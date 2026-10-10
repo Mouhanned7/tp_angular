@@ -1,22 +1,48 @@
-<main>
-  <h1>TaskFlow</h1>
+<main style="margin-inline: auto; width: 100%;">
+  <header style="margin: 0 auto 2rem; text-align: center;">
+    <p style="margin: 0 0 0.5rem; color: #2563eb; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;">
+      Gestion de projets
+    </p>
+    <h1 style="margin: 0; color: #0f172a; font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.04em;">
+      TaskFlow
+    </h1>
+    <p style="margin: 0.75rem 0 0; color: #64748b;">
+      Retrouvez vos projets et suivez l’avancement des tâches.
+    </p>
+  </header>
 
-  <label for="search">Rechercher un projet</label>
-
-  <input id="search" type="search" placeholder="Rechercher un projet..." [(ngModel)]="searchTerm" />
+  <div style="max-width: 560px; margin: 0 auto 1.75rem; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 1rem; background: rgb(255 255 255 / 85%); box-shadow: 0 8px 24px rgb(15 23 42 / 5%);">
+    <label for="search" style="display: block; margin-bottom: 0.5rem; color: #334155; font-size: 0.9rem; font-weight: 600;">
+      Rechercher un projet
+    </label>
+    <input
+      id="search"
+      type="search"
+      placeholder="Nom du projet..."
+      [(ngModel)]="searchTerm"
+      style="width: 100%; box-sizing: border-box; padding: 0.75rem 0.875rem; border: 1px solid #cbd5e1; border-radius: 0.625rem; background: #fff; color: #0f172a; font: inherit; outline-color: #3b82f6;"
+    />
+  </div>
 
   @if (selectedProject(); as selected) {
-    <p role="status">Projet sélectionné : {{ selected.name }}</p>
+    <p
+      role="status"
+      style="max-width: 560px; margin: 0 auto 1.5rem; padding: 0.75rem 1rem; border: 1px solid #bbf7d0; border-radius: 0.75rem; background: #f0fdf4; color: #166534; text-align: center;"
+    >
+      Projet sélectionné : <strong>{{ selected.name }}</strong>
+    </p>
   }
 
   <section
     aria-label="Projets"
-    style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; align-items: start;"
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1.25rem; align-items: stretch;"
   >
     @for (project of filteredProjects(); track project.id) {
       <app-project-card [project]="project" (projectSelected)="onProjectSelected($event)" />
     } @empty {
-      <p style="grid-column: 1 / -1;">Aucun projet trouvé.</p>
+      <p style="grid-column: 1 / -1; max-width: 560px; margin: 0 auto; padding: 1.25rem; border: 1px dashed #cbd5e1; border-radius: 1rem; background: rgb(255 255 255 / 75%); color: #64748b; text-align: center;">
+        Aucun projet trouvé.
+      </p>
     }
   </section>
 </main>

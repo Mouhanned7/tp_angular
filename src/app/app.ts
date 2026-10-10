@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ProjectList } from './features/projects/components/project-list/project-list';
+import { UserList } from './features/users/components/user-list/user-list';
+import { AppView, ViewToggle } from './shared/components/view-toggle/view-toggle';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ProjectList],
+  imports: [ProjectList, UserList, ViewToggle],
   templateUrl: './app.html',
 })
-export class App {}
+export class App {
+  view = signal<AppView>('tasks');
+}

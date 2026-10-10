@@ -1,0 +1,30 @@
+<article>
+  <h2>{{ user().name }}</h2>
+  <p>{{ user().email }}</p>
+  <p>{{ user().role }}</p>
+
+  <span
+    [style.backgroundColor]="user().active ? '#dcfce7' : '#fee2e2'"
+    [style.color]="user().active ? '#166534' : '#991b1b'"
+    style="padding: 0.25rem 0.625rem; border-radius: 999px;"
+  >
+    {{ user().active ? 'Actif' : 'Inactif' }}
+  </span>
+
+  <p>
+    À faire : {{ todoCount() }} |
+    En cours : {{ inProgressCount() }} |
+    Terminées : {{ doneCount() }}
+  </p>
+
+  @if (tasks().length === 0) {
+    <app-empty-state message="Aucune tâche assignée." />
+  } @else {
+    @for (group of projectGroups(); track group.projectName) {
+      <app-user-project-group
+        [projectName]="group.projectName"
+        [tasks]="group.tasks"
+      />
+    }
+  }
+</article>

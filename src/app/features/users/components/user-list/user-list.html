@@ -1,0 +1,33 @@
+<section style="width: 100%; margin-inline: auto;">
+  <header style="margin: 0 auto 2rem; text-align: center;">
+    <p style="margin: 0 0 0.5rem; color: #2563eb; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;">
+      Équipe
+    </p>
+    <h1 style="margin: 0; color: #0f172a; font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.04em;">
+      Utilisateurs
+    </h1>
+    <p style="margin: 0.75rem 0 0; color: #64748b;">
+      Consultez les membres de l’équipe et leurs tâches.
+    </p>
+  </header>
+
+  <div style="max-width: 560px; margin: 0 auto 1.75rem; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 1rem; background: rgb(255 255 255 / 85%); box-shadow: 0 8px 24px rgb(15 23 42 / 5%);">
+    <label for="user-search" style="display: block; margin-bottom: 0.5rem; color: #334155; font-size: 0.9rem; font-weight: 600;">
+      Rechercher un utilisateur
+    </label>
+    <input
+      id="user-search"
+      type="search"
+      placeholder="Nom, courriel ou rôle..."
+      [ngModel]="searchTerm()"
+      (ngModelChange)="searchTerm.set($event)"
+      style="width: 100%; box-sizing: border-box; padding: 0.75rem 0.875rem; border: 1px solid #cbd5e1; border-radius: 0.625rem; background: #fff; color: #0f172a; font: inherit; outline-color: #3b82f6;"
+    />
+  </div>
+
+  @for (user of filteredUsers(); track user.id) {
+    <app-user-card [user]="user" [projects]="projects()" />
+  } @empty {
+    <app-empty-state message="Aucun utilisateur ne correspond à la recherche." />
+  }
+</section>

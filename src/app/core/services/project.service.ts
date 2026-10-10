@@ -11,4 +11,9 @@ export class ProjectService {
   getProjects(): Observable<Project[]> {
     return of(PROJECTS);
   }
+
+  getProjectById(id: number): Observable<Project | undefined> {
+    const project = PROJECTS.find((project) => project.id === id);
+    return of(project);
+  }
 }

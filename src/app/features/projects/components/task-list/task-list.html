@@ -1,14 +1,50 @@
 @if (tasks().length === 0) {
-  <p>Aucune tâche.</p>
+  <p
+    style="margin: 0.75rem 0; padding: 1rem; border: 1px dashed #cbd5e1; border-radius: 0.75rem; background: #f8fafc; color: #64748b; text-align: center;"
+  >
+    Aucune tâche.
+  </p>
 } @else {
-  <ul>
+  <ul
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none;"
+  >
     @for (task of tasks(); track task.id) {
-      <li>
-        <h3>{{ task.title }}</h3>
+      <li
+        style="overflow: hidden; border: 1px solid #e2e8f0; border-radius: 1rem; background: #fff; box-shadow: 0 4px 12px rgb(15 23 42 / 6%);"
+      >
+        <article style="display: flex; height: 100%; flex-direction: column;">
+          <div style="padding: 1rem 1rem 0.75rem;">
+            <h3 style="margin: 0; color: #0f172a; font-size: 1rem; line-height: 1.5;">
+              {{ task.title }}
+            </h3>
+          </div>
 
-        <p>Priorité : {{ task.priority }}</p>
+          <div
+            style="display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0 1rem 1rem;"
+            aria-label="Détails de la tâche"
+          >
+            <span
+              style="padding: 0.25rem 0.625rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #f8fafc; color: #475569; font-size: 0.8rem;"
+            >
+              Priorité : {{ task.priority }}
+            </span>
+            <span
+              [style.backgroundColor]="task.status === 'Terminé' ? '#dcfce7' : task.status === 'En cours' ? '#dbeafe' : '#fef3c7'"
+              [style.color]="task.status === 'Terminé' ? '#166534' : task.status === 'En cours' ? '#1d4ed8' : '#92400e'"
+              style="padding: 0.25rem 0.625rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;"
+            >
+              {{ task.status }}
+            </span>
+          </div>
 
-        <p>Statut : {{ task.status }}</p>
+          @if (showAssignee()) {
+            <footer
+              style="margin-top: auto; padding: 0.75rem 1rem; border-top: 1px solid #f1f5f9; background: #f8fafc; color: #64748b; font-size: 0.875rem;"
+            >
+              Assigné à <strong style="color: #334155;">{{ getUserName(task.assigneeId) }}</strong>
+            </footer>
+          }
+        </article>
       </li>
     }
   </ul>
