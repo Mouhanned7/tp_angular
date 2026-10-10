@@ -9,9 +9,14 @@
     <p role="status">Projet sélectionné : {{ selected.name }}</p>
   }
 
-  @for (project of filteredProjects(); track project.id) {
-    <app-project-card [project]="project" (projectSelected)="onProjectSelected($event)" />
-  } @empty {
-    <p>Aucun projet trouvé.</p>
-  }
+  <section
+    aria-label="Projets"
+    style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; align-items: start;"
+  >
+    @for (project of filteredProjects(); track project.id) {
+      <app-project-card [project]="project" (projectSelected)="onProjectSelected($event)" />
+    } @empty {
+      <p style="grid-column: 1 / -1;">Aucun projet trouvé.</p>
+    }
+  </section>
 </main>

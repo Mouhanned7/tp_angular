@@ -1,11 +1,19 @@
-<article>
-  <h2>{{ project().name }}</h2>
+<article style="margin-block: 1rem; padding: 1.25rem; border: 1px solid #dbe3ee; border-radius: 0.75rem; background: #fff; box-shadow: 0 2px 8px rgb(15 23 42 / 8%);">
+  <h2 style="margin: 0 0 0.75rem; color: #1e293b;">{{ project().name }}</h2>
 
-  <p>{{ project().description }}</p>
+  <p style="margin: 0 0 0.75rem; color: #475569;">{{ project().description }}</p>
 
-  <p>Statut : {{ project().status }}</p>
+  <p style="display: inline-block; margin: 0 0 1rem; padding: 0.25rem 0.625rem; border-radius: 999px; background: #eff6ff; color: #1d4ed8; font-size: 0.875rem;">
+    Statut : {{ project().status }}
+  </p>
 
   <app-task-list [tasks]="project().tasks" />
 
-  <button type="button" (click)="selectProject()">Sélectionner</button>
+  <button
+    type="button"
+    (click)="selectProject()"
+    style="margin-top: 0.75rem; padding: 0.5rem 0.875rem; border: 0; border-radius: 0.5rem; background: #2563eb; color: #fff; font: inherit; cursor: pointer;"
+  >
+    Sélectionner
+  </button>
 </article>
