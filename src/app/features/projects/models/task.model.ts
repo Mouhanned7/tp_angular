@@ -1,5 +1,4 @@
-
-export type TaskPriority = 'Haute'| 'Moyenne' |'Basse';
+export type TaskPriority = 'Haute' | 'Moyenne' | 'Basse';
 export type TaskStatus = 'En attente' | 'En cours' | 'Terminé';
 
 export interface Task {
@@ -7,5 +6,7 @@ export interface Task {
   title: string;
   priority: TaskPriority;
   status: TaskStatus;
-  assigneeId: number;
+  assigneeId?: number;
+  dueDate?: string;
+  description?: string;
 }

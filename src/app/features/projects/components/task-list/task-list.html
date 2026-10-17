@@ -10,31 +10,63 @@
   >
     @for (task of tasks(); track task.id) {
       <li
-        style="overflow: hidden; border: 1px solid #e2e8f0; border-radius: 1rem; background: #fff; box-shadow: 0 4px 12px rgb(15 23 42 / 6%);"
+        appHighlight
+        [ngClass]="getStatusBorderClass(task.status)"
+        [style.borderLeftColor]="getStatusBorderColor(task.status)"
+        style="overflow: hidden; border: 1px solid #e2e8f0; border-left-width: 4px; border-radius: 1rem; background: #fff; box-shadow: 0 4px 12px rgb(15 23 42 / 6%); transition: background-color 0.2s;"
       >
         <article style="display: flex; height: 100%; flex-direction: column;">
-          <div style="padding: 1rem 1rem 0.75rem;">
-            <h3 style="margin: 0; color: #0f172a; font-size: 1rem; line-height: 1.5;">
+          <div style="padding: 1rem 1rem 0.5rem;">
+            <h3 style="margin: 0 0 0.5rem; color: #0f172a; font-size: 1rem; line-height: 1.5;">
               {{ task.title }}
             </h3>
+
+            @if (task.description) {
+              <p
+                style="margin: 0 0 0.5rem; color: #475569; font-size: 0.85rem; line-height: 1.4;"
+                [title]="task.description"
+              >
+                {{ task.description | truncate:40 }}
+              </p>
+            }
           </div>
 
           <div
-            style="display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0 1rem 1rem;"
-            aria-label="Détails de la tâche"
+            style="display: flex; flex-direction: column; gap: 0.5rem; padding: 0 1rem 0.75rem;"
           >
-            <span
-              style="padding: 0.25rem 0.625rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #f8fafc; color: #475569; font-size: 0.8rem;"
-            >
-              Priorité : {{ task.priority }}
-            </span>
-            <span
-              [style.backgroundColor]="task.status === 'Terminé' ? '#dcfce7' : task.status === 'En cours' ? '#dbeafe' : '#fef3c7'"
-              [style.color]="task.status === 'Terminé' ? '#166534' : task.status === 'En cours' ? '#1d4ed8' : '#92400e'"
-              style="padding: 0.25rem 0.625rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;"
-            >
-              {{ task.status }}
-            </span>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;" aria-label="Détails de la tâche">
+              <span
+                style="padding: 0.25rem 0.625rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #f8fafc; color: #475569; font-size: 0.8rem; font-weight: 500;"
+              >
+                @switch (task.priority) {
+                  @case ('Haute') {
+                    <span>▲ Haute</span>
+                  }
+                  @case ('Moyenne') {
+                    <span>● Moyenne</span>
+                  }
+                  @default {
+                    <span>▼ Basse</span>
+                  }
+                }
+              </span>
+
+              <span
+                [style.backgroundColor]="task.status === 'Terminé' ? '#dcfce7' : task.status === 'En cours' ? '#dbeafe' : '#fef3c7'"
+                [style.color]="task.status === 'Terminé' ? '#166534' : task.status === 'En cours' ? '#1d4ed8' : '#92400e'"
+                style="padding: 0.25rem 0.625rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;"
+              >
+                {{ task.status }}
+              </span>
+            </div>
+
+            <div style="font-size: 0.8rem; color: #64748b;">
+              @if (task.dueDate; as dueDate) {
+                <span>{{ dueDate | date:'dd/MM/yyyy' }} · {{ dueDate | deadline }}</span>
+              } @else {
+                <span style="color: #94a3b8; font-style: italic;">Aucune échéance</span>
+              }
+            </div>
           </div>
 
           @if (showAssignee()) {

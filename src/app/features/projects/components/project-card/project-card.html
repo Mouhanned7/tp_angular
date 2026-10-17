@@ -1,19 +1,111 @@
-<article style="margin-block: 1rem; padding: 1.25rem; border: 1px solid #dbe3ee; border-radius: 0.75rem; background: #fff; box-shadow: 0 2px 8px rgb(15 23 42 / 8%);">
-  <h2 style="margin: 0 0 0.75rem; color: #1e293b;">{{ project().name }}</h2>
+<article
+  appHighlight
+  style="margin-block: 1rem; padding: 1.25rem; border: 1px solid #dbe3ee; border-radius: 0.75rem; background: #fff; box-shadow: 0 2px 8px rgb(15 23 42 / 8%); display: flex; flex-direction: column; gap: 0.75rem; transition: background-color 0.2s;"
+>
+  <header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+    <div>
+      <h2 style="margin: 0; color: #1e293b; font-size: 1.25rem; font-weight: 700;">
+        {{ project().name | uppercase }}
+      </h2>
+      <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.85rem;">
+        Début : <strong>{{ project().startDate | date:'dd MMMM yyyy' }}</strong>
+      </p>
+    </div>
 
-  <p style="margin: 0 0 0.75rem; color: #475569;">{{ project().description }}</p>
+    <div style="text-align: right;">
+      <span style="display: block; font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">
+        Budget
+      </span>
+      <span style="font-size: 1.1rem; font-weight: 700; color: #0f172a;">
+        {{ project().budget | currency:'TND':'code':'1.2-2' }}
+      </span>
+    </div>
+  </header>
 
-  <p style="display: inline-block; margin: 0 0 1rem; padding: 0.25rem 0.625rem; border-radius: 999px; background: #eff6ff; color: #1d4ed8; font-size: 0.875rem;">
-    Statut : {{ project().status }}
+  <p style="margin: 0; color: #475569; font-size: 0.95rem;">
+    {{ project().description }}
   </p>
 
-  <app-task-list [tasks]="project().tasks" />
+  <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+    <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 999px; background: #eff6ff; color: #1d4ed8; font-size: 0.85rem; font-weight: 500;">
+      Statut : {{ project().status }}
+    </span>
 
-  <button
-    type="button"
-    (click)="selectProject()"
-    style="margin-top: 0.75rem; padding: 0.5rem 0.875rem; border: 0; border-radius: 0.5rem; background: #2563eb; color: #fff; font: inherit; cursor: pointer;"
-  >
-    Sélectionner
-  </button>
+    @if (project().tasks.length === 0) {
+      <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 999px; background: #f1f5f9; color: #64748b; font-size: 0.85rem; font-weight: 600;">
+        Aucune tâche pour le moment
+      </span>
+    } @else if (completionRate === 1) {
+      <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 999px; background: #dcfce7; color: #15803d; font-size: 0.85rem; font-weight: 600;">
+        Projet terminé
+      </span>
+    } @else if (completionRate > 0) {
+      <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 999px; background: #dbeafe; color: #1d4ed8; font-size: 0.85rem; font-weight: 600;">
+        En progression
+      </span>
+    } @else {
+      <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 999px; background: #fef3c7; color: #b45309; font-size: 0.85rem; font-weight: 600;">
+        Pas encore démarré
+      </span>
+    }
+  </div>
+
+  @if (project().tasks.length > 0) {
+    <div style="margin-top: 0.25rem;">
+      <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem; color: #475569;">
+        <span>Avancement : <strong>{{ completionRate | percent:'1.0-0' }}</strong></span>
+        <span>Coût moyen / tâche : <strong>{{ averageCostPerTask | number:'1.0-0' }} TND</strong></span>
+      </div>
+
+      <div
+        class="w-full bg-gray-200 rounded-full h-2"
+        style="width: 100%; background-color: #e5e7eb; border-radius: 9999px; height: 0.5rem; overflow: hidden;"
+      >
+        <div
+          class="h-2 rounded-full"
+          [ngStyle]="{
+            width: (completionRate * 100) + '%',
+            backgroundColor: barColor
+          }"
+          style="height: 0.5rem; border-radius: 9999px; transition: width 0.3s ease, background-color 0.3s ease;"
+        ></div>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; font-size: 0.85rem; color: #475569;">
+      <span style="font-weight: 600;">Tâches par priorité :</span>
+      <div style="display: inline-flex; gap: 0.35rem; flex-wrap: wrap;">
+        @for (item of tasksByPriority | keyvalue; track item.key) {
+          <span style="padding: 0.15rem 0.5rem; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.78rem;">
+            {{ item.key }} : <strong>{{ item.value }}</strong>
+          </span>
+        }
+      </div>
+    </div>
+  }
+
+  <section style="margin-top: 0.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+      <h3 style="margin: 0; color: #334155; font-size: 0.95rem; font-weight: 600;">
+        Tâches (3 premières)
+      </h3>
+      @if (project().tasks.length > 3) {
+        <span style="font-size: 0.75rem; color: #64748b;">
+          Affichage de 3 sur {{ project().tasks.length }}
+        </span>
+      }
+    </div>
+
+    <app-task-list [tasks]="project().tasks | slice:0:3" />
+  </section>
+
+  <footer style="margin-top: 0.5rem;">
+    <button
+      type="button"
+      (click)="selectProject()"
+      style="padding: 0.5rem 0.875rem; border: 0; border-radius: 0.5rem; background: #2563eb; color: #fff; font: inherit; cursor: pointer; font-size: 0.875rem;"
+    >
+      Sélectionner
+    </button>
+  </footer>
 </article>
