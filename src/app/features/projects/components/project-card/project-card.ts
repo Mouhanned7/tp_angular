@@ -1,4 +1,5 @@
-import { Component, input, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
+import type { TaskStatus } from '../../models/task.model';
 import {
   CurrencyPipe,
   DatePipe,
@@ -35,18 +36,30 @@ export class ProjectCard {
 
   projectSelected = output<Project>();
 
+  taskStatusChange = output<{ projectId: number; taskId: number; newStatus: TaskStatus }>();
+
   selectProject(): void {
     this.projectSelected.emit(this.project());
   }
 
-  get completionRate(): number {
-    const tasks = this.project().tasks;
-    if (!tasks || tasks.length === 0) {
-      return 0;
-    }
-    const completedCount = tasks.filter(task => task.status === 'Terminé').length;
-    return completedCount / tasks.length;
+  onTaskStatusChange(event: { taskId: number; newStatus: TaskStatus }): void {
+    this.taskStatusChange.emit({
+      projectId: this.project().id,
+      taskId: event.taskId,
+      newStatus: event.newStatus,
+    });
   }
+
+  // Calcul réactif du nombre de tâches terminées
+  completedTasksCount = computed(() => {
+    return this.project().tasks.filter(t => t.status === 'Terminé').length;
+  });
+
+  // Calcul réactif du taux d'avancement
+  completionRate = computed(() => {
+    const total = this.project().tasks.length;
+    return total > 0 ? this.completedTasksCount() / total : 0;
+  });
 
   get averageCostPerTask(): number {
     const tasks = this.project().tasks;
@@ -73,13 +86,13 @@ export class ProjectCard {
   }
 
   get barColor(): string {
-    const rate = this.completionRate;
+    const rate = this.completionRate();
     if (rate < 0.34) {
-      return '#ef4444'; // rouge
+      return '#ef4444';
     }
     if (rate <= 0.66) {
-      return '#f59e0b'; // orange
+      return '#f59e0b';
     }
-    return '#22c55e'; // vert
+    return '#22c55e';
   }
 }

@@ -35,11 +35,11 @@
       <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 999px; background: #f1f5f9; color: #64748b; font-size: 0.85rem; font-weight: 600;">
         Aucune tâche pour le moment
       </span>
-    } @else if (completionRate === 1) {
+    } @else if (completionRate() === 1) {
       <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 999px; background: #dcfce7; color: #15803d; font-size: 0.85rem; font-weight: 600;">
         Projet terminé
       </span>
-    } @else if (completionRate > 0) {
+    } @else if (completionRate() > 0) {
       <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 999px; background: #dbeafe; color: #1d4ed8; font-size: 0.85rem; font-weight: 600;">
         En progression
       </span>
@@ -53,7 +53,7 @@
   @if (project().tasks.length > 0) {
     <div style="margin-top: 0.25rem;">
       <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem; color: #475569;">
-        <span>Avancement : <strong>{{ completionRate | percent:'1.0-0' }}</strong></span>
+        <span>Avancement : <strong>{{ completionRate() | percent:'1.0-0' }}</strong></span>
         <span>Coût moyen / tâche : <strong>{{ averageCostPerTask | number:'1.0-0' }} TND</strong></span>
       </div>
 
@@ -64,7 +64,7 @@
         <div
           class="h-2 rounded-full"
           [ngStyle]="{
-            width: (completionRate * 100) + '%',
+            width: (completionRate() * 100) + '%',
             backgroundColor: barColor
           }"
           style="height: 0.5rem; border-radius: 9999px; transition: width 0.3s ease, background-color 0.3s ease;"
@@ -96,8 +96,10 @@
       }
     </div>
 
-    <app-task-list [tasks]="project().tasks | slice:0:3" />
-  </section>
+<app-task-list
+  [tasks]="project().tasks | slice:0:3"
+  (taskStatusChange)="onTaskStatusChange($event)"
+/>  </section>
 
   <footer style="margin-top: 0.5rem;">
     <button

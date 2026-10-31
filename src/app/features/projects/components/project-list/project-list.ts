@@ -10,6 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { ProjectService } from '../../../../core/services/project.service';
 import type { Project } from '../../models/project.model';
 import { ProjectCard } from '../project-card/project-card';
+  import type { TaskStatus } from '../../models/task.model';
+
 
 @Component({
   selector: 'app-project-list',
@@ -31,6 +33,34 @@ export class ProjectList implements OnInit {
       project.name.toLowerCase().includes(search)
     );
   });
+
+
+// Dans la classe ProjectList :
+onTaskStatusChange(event: { projectId: number; taskId: number; newStatus: TaskStatus }): void {
+  this.projects.update(projects =>
+    projects.map(project => {
+      // Si ce n'est pas le projet concerné, on le retourne tel quel
+      if (project.id !== event.projectId) {
+        return project;
+      }
+
+      // On crée un nouvel objet projet avec une nouvelle liste de tâches
+      return {
+        ...project,
+        tasks: project.tasks.map(task => {
+          if (task.id !== event.taskId) {
+            return task;
+          }
+          // On crée une nouvelle tâche avec le nouveau statut
+          return {
+            ...task,
+            status: event.newStatus,
+          };
+        }),
+      };
+    })
+  );
+}
 
   ngOnInit(): void {
     this.projectService.getProjects().subscribe(projects => {
