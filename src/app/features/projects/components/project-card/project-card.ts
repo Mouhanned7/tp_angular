@@ -4,30 +4,29 @@ import {
   CurrencyPipe,
   DatePipe,
   DecimalPipe,
-  KeyValuePipe,
   NgStyle,
   PercentPipe,
-  SlicePipe,
-  UpperCasePipe,
 } from '@angular/common';
 import type { Project } from '../../models/project.model';
 import { TaskList } from '../task-list/task-list';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
+import {
+  StatBadgeGroup,
+  StatBadgeItem,
+} from '../../../../shared/components/stat-badge-group/stat-badge-group';
 
 @Component({
   selector: 'app-project-card',
   standalone: true,
   imports: [
     TaskList,
-    UpperCasePipe,
     DatePipe,
     CurrencyPipe,
     PercentPipe,
     DecimalPipe,
-    SlicePipe,
-    KeyValuePipe,
     NgStyle,
     HighlightDirective,
+    StatBadgeGroup,
   ],
   templateUrl: './project-card.html',
 })
@@ -37,6 +36,7 @@ export class ProjectCard {
   projectSelected = output<Project>();
 
   taskStatusChange = output<{ projectId: number; taskId: number; newStatus: TaskStatus }>();
+  taskDelete = output<{ projectId: number; taskId: number }>();
 
   selectProject(): void {
     this.projectSelected.emit(this.project());
@@ -47,6 +47,13 @@ export class ProjectCard {
       projectId: this.project().id,
       taskId: event.taskId,
       newStatus: event.newStatus,
+    });
+  }
+
+  onTaskDelete(event: { taskId: number }): void {
+    this.taskDelete.emit({
+      projectId: this.project().id,
+      taskId: event.taskId,
     });
   }
 
@@ -85,6 +92,15 @@ export class ProjectCard {
     return counts;
   }
 
+  priorityBadges = computed<StatBadgeItem[]>(() => {
+    const counts = this.tasksByPriority;
+    return [
+      { label: 'Basse', count: counts['Basse'] ?? 0, color: 'blue' },
+      { label: 'Haute', count: counts['Haute'] ?? 0, color: 'red' },
+      { label: 'Moyenne', count: counts['Moyenne'] ?? 0, color: 'amber' },
+    ];
+  });
+
   get barColor(): string {
     const rate = this.completionRate();
     if (rate < 0.34) {
@@ -93,6 +109,6 @@ export class ProjectCard {
     if (rate <= 0.66) {
       return '#f59e0b';
     }
-    return '#22c55e';
+    return '#10b981';
   }
 }

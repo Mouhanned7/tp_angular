@@ -1,4 +1,16 @@
-<section>
-  <h3>{{ projectName() }} — {{ tasks().length }} tâche(s)</h3>
-  <app-task-list [tasks]="tasks()" [showAssignee]="false" />
+<section style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem; width: 100%;">
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.4rem;">
+    <h3 style="margin: 0; color: #1e293b; font-size: 0.95rem; font-weight: 700;">
+      {{ projectName() }}
+    </h3>
+    <span style="font-size: 0.75rem; padding: 0.15rem 0.55rem; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; border-radius: 999px; font-weight: 600;">
+      {{ tasks().length }} tâche(s)
+    </span>
+  </div>
+  <app-task-list
+    [tasks]="tasks()"
+    [showAssignee]="false"
+    (taskStatusChange)="onTaskStatusChange($event)"
+    (taskDelete)="onTaskDelete($event)"
+  />
 </section>

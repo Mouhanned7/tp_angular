@@ -2,6 +2,7 @@ import {
   Component,
   computed,
   inject,
+  input,
   OnInit,
   signal,
 } from '@angular/core';
@@ -18,12 +19,13 @@ import { ProjectCard } from '../project-card/project-card';
   standalone: true,
   imports: [FormsModule, ProjectCard],
   templateUrl: './project-list.html',
+  styleUrl: './project-list.css',
 })
 export class ProjectList implements OnInit {
   private readonly projectService = inject(ProjectService);
 
   projects = signal<Project[]>([]);
-  searchTerm = signal('');
+  searchTerm = input<string>('');
   selectedProject = signal<Project | null>(null);
 
   filteredProjects = computed(() => {
@@ -60,6 +62,22 @@ onTaskStatusChange(event: { projectId: number; taskId: number; newStatus: TaskSt
       };
     })
   );
+  this.projectService.updateTaskStatus(event.taskId, event.newStatus);
+}
+
+onTaskDelete(event: { projectId: number; taskId: number }): void {
+  this.projects.update(projects =>
+    projects.map(project => {
+      if (project.id !== event.projectId) {
+        return project;
+      }
+      return {
+        ...project,
+        tasks: project.tasks.filter(task => task.id !== event.taskId),
+      };
+    })
+  );
+  this.projectService.deleteTask(event.taskId);
 }
 
   ngOnInit(): void {

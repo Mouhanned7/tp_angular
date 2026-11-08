@@ -1,18 +1,45 @@
 <div
-  style="min-height: 100vh; padding: 2rem 1.25rem; box-sizing: border-box; background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 48%, #eef2ff 100%); color: #1e293b; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;"
+  style="min-height: 100vh; padding: 1.5rem 2rem; box-sizing: border-box; background: #f8fafc; color: #0f172a; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;"
 >
-  <div style="width: min(100%, 1100px); margin-inline: auto;">
-    <header style="display: flex; justify-content: center; margin-bottom: 2rem;">
-      <app-view-toggle
-        [view]="view()"
-        (viewChange)="view.set($event)"
-      />
+  <div style="width: 100%; max-width: 1800px; margin-inline: auto;">
+    <!-- Barre d'en-tête professionnelle et épurée -->
+    <header
+      style="margin-bottom: 1.75rem; padding: 0.85rem 1.25rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); display: flex; justify-content: space-between; align-items: center; gap: 1.25rem; flex-wrap: wrap;"
+    >
+      <!-- Logo et titre sobre -->
+      <div style="display: flex; align-items: baseline; gap: 0.75rem;">
+        <h1 style="margin: 0; color: #0f172a; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em;">
+          TaskFlow
+        </h1>
+        <span style="font-size: 0.775rem; color: #64748b; font-weight: 500;">
+          Gestion collaborative
+        </span>
+      </div>
+
+      <!-- Recherche et Sélecteur de vue dans le même row -->
+      <div style="display: flex; align-items: center; gap: 1rem; flex: 1; justify-content: flex-end; min-width: 280px; flex-wrap: wrap;">
+        <div style="flex: 1; max-width: 460px; min-width: 220px;">
+          <input
+            id="global-search"
+            type="search"
+            [placeholder]="view() === 'tasks' ? 'Rechercher un projet...' : 'Rechercher un membre de l\'équipe...'"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="searchTerm.set($event)"
+            style="width: 100%; box-sizing: border-box; padding: 0.45rem 0.85rem; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff; color: #0f172a; font: inherit; font-size: 0.85rem; outline-color: #0f172a; transition: border-color 0.15s ease;"
+          />
+        </div>
+
+        <app-view-toggle
+          [view]="view()"
+          (viewChange)="onViewChange($event)"
+        />
+      </div>
     </header>
 
     @if (view() === 'tasks') {
-      <app-project-list />
+      <app-project-list [searchTerm]="searchTerm()" />
     } @else {
-      <app-user-list />
+      <app-user-list [searchTerm]="searchTerm()" />
     }
   </div>
 </div>

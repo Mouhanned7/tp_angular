@@ -1,21 +1,64 @@
-@if (tasks().length === 0) {
-  <p
-    style="margin: 0.75rem 0; padding: 1rem; border: 1px dashed #cbd5e1; border-radius: 0.75rem; background: #f8fafc; color: #64748b; text-align: center;"
+<!-- Filtre des tâches (Bonus 2) -->
+<div style="display: flex; gap: 0.35rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
+  <button
+    type="button"
+    (click)="taskFilter.set('all')"
+    [style.backgroundColor]="taskFilter() === 'all' ? '#0f172a' : '#f1f5f9'"
+    [style.color]="taskFilter() === 'all' ? '#ffffff' : '#475569'"
+    [style.borderColor]="taskFilter() === 'all' ? '#0f172a' : '#e2e8f0'"
+    style="padding: 0.2rem 0.55rem; border: 1px solid; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.12s ease;"
   >
-    Aucune tâche.
+    Toutes ({{ tasks().length }})
+  </button>
+
+  <button
+    type="button"
+    (click)="taskFilter.set('inProgress')"
+    [style.backgroundColor]="taskFilter() === 'inProgress' ? '#1d4ed8' : '#eff6ff'"
+    [style.color]="taskFilter() === 'inProgress' ? '#ffffff' : '#1d4ed8'"
+    [style.borderColor]="taskFilter() === 'inProgress' ? '#1d4ed8' : '#bfdbfe'"
+    style="padding: 0.2rem 0.55rem; border: 1px solid; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.12s ease;"
+  >
+    En cours
+  </button>
+
+  <button
+    type="button"
+    (click)="taskFilter.set('done')"
+    [style.backgroundColor]="taskFilter() === 'done' ? '#166534' : '#f0fdf4'"
+    [style.color]="taskFilter() === 'done' ? '#ffffff' : '#166534'"
+    [style.borderColor]="taskFilter() === 'done' ? '#166534' : '#bbf7d0'"
+    style="padding: 0.2rem 0.55rem; border: 1px solid; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.12s ease;"
+  >
+    Terminées
+  </button>
+</div>
+
+@if (filteredTasks().length === 0) {
+  <p
+    style="margin: 0.5rem 0; padding: 1rem; border: 1px dashed #cbd5e1; border-radius: 6px; background: #f8fafc; color: #64748b; text-align: center; font-size: 0.825rem;"
+  >
+    Aucune tâche correspondante.
   </p>
 } @else {
-  <ul
-    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none;"
+  <!-- Conteneur défilant : tâches FULL WIDTH -->
+  <div
+    style="max-height: 380px; overflow-y: auto; overflow-x: hidden; padding: 0.2rem 0.25rem 0.4rem 0; scrollbar-width: thin; width: 100%; box-sizing: border-box;"
   >
-    @for (task of tasks(); track task.id) {
-      <li>
-        <app-task-item
-          [task]="task"
-          [showAssignee]="showAssignee()"
-          (taskStatusChange)="onItemStatusChange(task.id, $event)"
-        />
-      </li>
-    }
-  </ul>
+    <ul
+      style="display: flex; flex-direction: column; gap: 0.75rem; margin: 0; padding: 0; list-style: none; width: 100%; box-sizing: border-box;"
+    >
+      @for (task of filteredTasks(); track task.id) {
+        <li style="width: 100%; box-sizing: border-box; display: flex;">
+          <app-task-item
+            style="display: flex; width: 100%;"
+            [task]="task"
+            [showAssignee]="showAssignee()"
+            (taskStatusChange)="onItemStatusChange(task.id, $event)"
+            (taskDelete)="onItemDelete(task.id)"
+          />
+        </li>
+      }
+    </ul>
+  </div>
 }

@@ -1,51 +1,42 @@
-<main style="margin-inline: auto; width: 100%;">
-  <header style="margin: 0 auto 2rem; text-align: center;">
-    <p style="margin: 0 0 0.5rem; color: #2563eb; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;">
-      Gestion de projets
-    </p>
-    <h1 style="margin: 0; color: #0f172a; font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.04em;">
-      TaskFlow
-    </h1>
-    <p style="margin: 0.75rem 0 0; color: #64748b;">
-      Retrouvez vos projets et suivez l’avancement des tâches.
-    </p>
-  </header>
-
-  <div style="max-width: 560px; margin: 0 auto 1.75rem; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 1rem; background: rgb(255 255 255 / 85%); box-shadow: 0 8px 24px rgb(15 23 42 / 5%);">
-    <label for="search" style="display: block; margin-bottom: 0.5rem; color: #334155; font-size: 0.9rem; font-weight: 600;">
-      Rechercher un projet
-    </label>
-    <input
-      id="search"
-      type="search"
-      placeholder="Nom du projet..."
-      [(ngModel)]="searchTerm"
-      style="width: 100%; box-sizing: border-box; padding: 0.75rem 0.875rem; border: 1px solid #cbd5e1; border-radius: 0.625rem; background: #fff; color: #0f172a; font: inherit; outline-color: #3b82f6;"
-    />
-  </div>
-
+<main style="width: 100%;">
   @if (selectedProject(); as selected) {
-    <p
+    <div
       role="status"
-      style="max-width: 560px; margin: 0 auto 1.5rem; padding: 0.75rem 1rem; border: 1px solid #bbf7d0; border-radius: 0.75rem; background: #f0fdf4; color: #166534; text-align: center;"
+      style="margin-bottom: 1.5rem; padding: 0.85rem 1.25rem; border: 1px solid #bbf7d0; border-radius: 0.875rem; background: #f0fdf4; color: #166534; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;"
     >
-      Projet sélectionné : <strong>{{ selected.name }}</strong>
-    </p>
+      <span>Projet sélectionné : <strong style="font-size: 1.05rem;">{{ selected.name }}</strong></span>
+      <button
+        type="button"
+        (click)="selectedProject.set(null)"
+        style="padding: 0.25rem 0.65rem; border: 1px solid #86efac; border-radius: 0.5rem; background: #fff; color: #166534; font: inherit; font-size: 0.8rem; cursor: pointer;"
+      >
+        Désélectionner
+      </button>
+    </div>
   }
 
   <section
     aria-label="Projets"
-    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1.25rem; align-items: stretch;"
+    class="project-cards-grid"
   >
     @for (project of filteredProjects(); track project.id) {
-  <app-project-card
-  [project]="project"
-  (projectSelected)="onProjectSelected($event)"
-  (taskStatusChange)="onTaskStatusChange($event)"
-/>    } @empty {
-      <p style="grid-column: 1 / -1; max-width: 560px; margin: 0 auto; padding: 1.25rem; border: 1px dashed #cbd5e1; border-radius: 1rem; background: rgb(255 255 255 / 75%); color: #64748b; text-align: center;">
-        Aucun projet trouvé.
-      </p>
+      <app-project-card
+        [project]="project"
+        (projectSelected)="onProjectSelected($event)"
+        (taskStatusChange)="onTaskStatusChange($event)"
+        (taskDelete)="onTaskDelete($event)"
+      />
+    } @empty {
+      <div
+        style="grid-column: 1 / -1; margin: 2rem auto; padding: 2.5rem; border: 1px dashed #cbd5e1; border-radius: 1rem; background: rgba(255, 255, 255, 0.8); color: #64748b; text-align: center; max-width: 600px;"
+      >
+        <p style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #334155;">
+          Aucun projet ne correspond à votre recherche.
+        </p>
+        <p style="margin: 0.5rem 0 0; font-size: 0.9rem;">
+          Essayez avec un autre mot-clé dans la barre de recherche.
+        </p>
+      </div>
     }
   </section>
 </main>

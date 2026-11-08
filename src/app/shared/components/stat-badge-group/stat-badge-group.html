@@ -1,0 +1,31 @@
+<div style="display: flex; flex-direction: column; gap: 0.4rem;">
+  <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+    @if (title()) {
+      <span style="font-size: 0.8rem; font-weight: 600; color: #475569;">
+        {{ title() }}
+      </span>
+    }
+
+    <div style="display: inline-flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+      @for (badge of badges(); track badge.label) {
+        @let style = getBadgeStyles(badge.color);
+        <span
+          [style.backgroundColor]="style.background"
+          [style.border]="style.border"
+          [style.color]="style.color"
+          style="display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.775rem; font-weight: 500; line-height: 1.3;"
+        >
+          <span>{{ badge.label }}</span>
+          <span style="margin: 0 0.25rem;">:</span>
+          <strong style="font-weight: 700;">{{ badge.count }}</strong>
+        </span>
+      }
+    </div>
+  </div>
+
+  @if (totalText()) {
+    <div style="font-size: 0.8rem; font-weight: 600; color: #475569; margin-top: 0.15rem;">
+      {{ totalText() }}
+    </div>
+  }
+</div>

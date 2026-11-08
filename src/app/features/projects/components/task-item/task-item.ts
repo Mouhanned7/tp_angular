@@ -5,6 +5,7 @@ import { USERS } from '../../../users/data/users.data';
 import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
 import { DeadlinePipe } from '../../../../shared/pipes/deadline.pipe';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
+import { TaskStatusBadge } from '../../../../shared/components/task-status-badge/task-status-badge';
 
 @Component({
   selector: 'app-task-item',
@@ -15,6 +16,7 @@ import { HighlightDirective } from '../../../../shared/directives/highlight.dire
     TruncatePipe,
     DeadlinePipe,
     HighlightDirective,
+    TaskStatusBadge,
   ],
   templateUrl: './task-item.html',
 })
@@ -23,8 +25,9 @@ export class TaskItem {
   task = input.required<Task>();
   showAssignee = input<boolean>(true);
 
-  // Sortie (Output)
+  // Sorties (Outputs)
   taskStatusChange = output<TaskStatus>();
+  taskDelete = output<number>();
 
   // Récupérer le nom de l'utilisateur
   getUserName(assigneeId?: number): string {
@@ -48,7 +51,10 @@ export class TaskItem {
     this.taskStatusChange.emit(next);
   }
 
-  // Classes Tailwind pour différencier visuellement la bordure selon le statut
+  onDelete(): void {
+    this.taskDelete.emit(this.task().id);
+  }
+
   getStatusBorderClass(status: TaskStatus): string {
     switch (status) {
       case 'Terminé':

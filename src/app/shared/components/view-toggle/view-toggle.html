@@ -1,14 +1,15 @@
 <nav
   aria-label="Choisir une vue"
-  style="display: inline-flex; gap: 0.375rem; padding: 0.375rem; border: 1px solid #dbe3ee; border-radius: 0.875rem; background: rgb(255 255 255 / 85%); box-shadow: 0 8px 24px rgb(15 23 42 / 8%);"
+  style="display: inline-flex; gap: 0.35rem; padding: 0.3rem; border: 1px solid #cbd5e1; border-radius: 0.75rem; background: #f1f5f9;"
 >
   <button
     type="button"
     [style.fontWeight]="view() === 'tasks' ? '700' : '500'"
     [style.backgroundColor]="view() === 'tasks' ? '#2563eb' : 'transparent'"
-    [style.color]="view() === 'tasks' ? '#fff' : '#475569'"
+    [style.color]="view() === 'tasks' ? '#ffffff' : '#64748b'"
+    [style.boxShadow]="view() === 'tasks' ? '0 2px 6px rgba(37, 99, 235, 0.3)' : 'none'"
     (click)="viewChange.emit('tasks')"
-    style="padding: 0.65rem 1.1rem; border: 0; border-radius: 0.625rem; font: inherit; cursor: pointer; transition: background-color 150ms ease, color 150ms ease;"
+    style="padding: 0.55rem 1.15rem; border: 0; border-radius: 0.55rem; font: inherit; font-size: 0.875rem; cursor: pointer; transition: all 150ms ease;"
   >
     Par tâche
   </button>
@@ -17,9 +18,10 @@
     type="button"
     [style.fontWeight]="view() === 'users' ? '700' : '500'"
     [style.backgroundColor]="view() === 'users' ? '#2563eb' : 'transparent'"
-    [style.color]="view() === 'users' ? '#fff' : '#475569'"
+    [style.color]="view() === 'users' ? '#ffffff' : '#64748b'"
+    [style.boxShadow]="view() === 'users' ? '0 2px 6px rgba(37, 99, 235, 0.3)' : 'none'"
     (click)="viewChange.emit('users')"
-    style="padding: 0.65rem 1.1rem; border: 0; border-radius: 0.625rem; font: inherit; cursor: pointer; transition: background-color 150ms ease, color 150ms ease;"
+    style="padding: 0.55rem 1.15rem; border: 0; border-radius: 0.55rem; font: inherit; font-size: 0.875rem; cursor: pointer; transition: all 150ms ease;"
   >
     Par user
   </button>
